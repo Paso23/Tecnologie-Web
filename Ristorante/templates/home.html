@@ -1,0 +1,186 @@
+{% include "base.html" %}
+{% include "script_messaggi.html"%}
+
+<body>
+{% block content %} 
+    <h1> Ristorante Belvedere</h1>
+    <p>
+        Dal 1973 Il ristorante Belvedere è un angolo di autentica tradizione emiliana,
+        dove ogni piatto racconta la storia e i sapori della terra che lo ispira. 
+        Immerso in una cornice panoramica mozzafiato, il Belvedere offre un'esperienza culinaria 
+        che celebra i prodotti tipici dell'Emilia-Romagna: pasta fatta in casa, ragù ricchi e saporiti, 
+        tagliatelle, tortellini, e piatti a base di carne di alta qualità, preparati con ingredienti freschi e locali. 
+        Un luogo dove la passione per la cucina si fonde con l'amore per la tradizione, regalando un viaggio nei gusti più autentici della regione.
+    </p>
+    <h6>Contattaci! tel. : +39 0536 130411 - mail : RistoranteBelvedere@gmail.com</h6>
+    <h2>La Media delle nostre recensioni:  {{media|floatformat:1}}/5 ★<h2>
+
+    <style>
+
+    table, th, td {
+      padding: 15px;
+      margin-left: auto;
+      margin-right: auto;
+      border: 1px solid;
+      text-align: center;
+    }
+
+    h5, h6 {
+      text-align: center;
+    }
+
+    h2{
+      text-align: center;
+    }   
+    </style>
+{% if request.user.is_authenticated %}
+  {% if request.user.is_staff %}
+        <h5> Gestione ordini in attesa: </h5>
+        {% if ordini_con_username %}
+        <table>
+          <tr>
+            <th>Numero Ordine</th>
+            <th>Cliente</th>
+            <th>Data</th>
+            <th>Status</th>
+            <th>Prodotti Ordinati</th>
+            <th>Concludi</th>
+          
+          </tr>
+          {% for ordine in ordini_con_username%}
+                <tr>
+                  <td>{{ordine.ordine.id}}</td>
+                  <td>{{ordine.username}}
+                  <td>{{ordine.ordine.data}}</td>
+                  <td>{{ordine.ordine.status}}</td>
+                  <td>
+                    {% for prodotto in ordine.prodotti %}
+                          {{ prodotto.prodotto.nome }} X {{ prodotto.quantita }} ,
+                      {% empty %}
+                          Non ci sono prodotti per questo ordine.
+                    {% endfor %}
+                  </td>
+                  <td>
+                    <form action="{% url 'concludi_ordine' ordine.ordine.id %}" method="POST">      
+                        {% csrf_token %}
+                        <div class="container">
+                            <button type="submit" class="btn btn-primary">Pronto</button>
+                        </div>
+                    </form>
+                  </td>
+          {% endfor %}
+                </table>
+          {% else %}
+                <h6>Al momento non sono presenti ordini.</h6>
+          {% endif %}              
+      {% else %}
+        
+        <h5> I tuoi ordini più recenti: </h5>
+        {% if ultimi_ordini%}
+            <table>
+                <tr>
+                  <th>Numero Ordine</th>
+                  <th>Data</th>
+                  <th>Status</th>
+                  <th>Prodotti Ordinati</th>
+                  <th>Pronto in</th>
+                  <th>Riproponi</th>
+                  <th>Rimuovi</th>
+                
+                </tr>
+                {% for ordine_cliente in ultimi_ordini%}
+                  <tr>
+                    <td>{{ordine_cliente.id}}</td>
+                    <td>{{ordine_cliente.data}}</td>
+                    <td>{{ordine_cliente.status}}</td>
+                    <td>
+                      {% for prodotto in ordine_cliente.prodotti %}
+                            {{ prodotto.prodotto.nome }} X {{ prodotto.quantita }} ,
+                        {% empty %}
+                            <li>Non ci sono prodotti per questo ordine.</li>
+                      {% endfor %}
+                    </td>
+                    <td>{{ordine_cliente.tempo}} min.</td>
+                    <td>
+                      <form action="{% url 'riproponi_ordine' ordine_cliente.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="container">
+                          <button type="submit" class="btn btn-primary">riproponi</button>
+                        </div>
+                      </form>
+                    </td>
+                    <td>
+                      <form action="{% url 'rimuovi_ordine' ordine_cliente.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="container">
+                          <button type="submit" class="btn btn-primary">rimuovi</button>
+                        </div>
+                      </form>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </table>
+        {% else %}
+              <h6>Al momento non sono presenti ordini in preparazione.</h6>
+        {% endif %}
+        <h5> Ordini Conclusi: </h5>
+        {% if ordini_conclusi%}
+          
+              <table>
+                  <tr>
+                    <th>Numero Ordine</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                    <th>Prodotti Ordinati</th>
+                    <th>Valuta la tua esperienza!</th>
+                    <th>Riproponi</th>
+                    <th>Rimuovi</th>
+                  
+                  </tr>
+                  {% for ordine_concluso in ordini_conclusi%}
+                    <tr>
+                      <td>{{ordine_concluso.id}}</td>
+                      <td>{{ordine_concluso.data}}</td>
+                      <td>{{ordine_concluso.status}}</td>
+                      <td>
+                        {% for prodotto in ordine_concluso.prodotti %}
+                              {{ prodotto.prodotto.nome }} X {{ prodotto.quantita }} ,
+                          {% empty %}
+                              <li>Non ci sono prodotti per questo ordine.</li>
+                        {% endfor %}
+                      </td>
+                      <td>
+                        <form action="{% url 'controllo_valutazione' ordine_concluso.id %}" method="post">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-primary">Valuta!</button>
+                        </form>
+                      </td>
+                      <td>
+                        <form action="{% url 'riproponi_ordine' ordine_concluso.id %}" method="post">
+                          {% csrf_token %}
+                          <div class="container">
+                            <button type="submit" class="btn btn-primary">riproponi</button>
+                          </div>
+                        </form>
+                      </td>
+                      <td>
+                        <form action="{% url 'rimuovi_ordine' ordine_concluso.id %}" method="post">
+                          {% csrf_token %}
+                          <div class="container">
+                            <button type="submit" class="btn btn-primary">rimuovi</button>
+                          </div>
+                        </form>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </table>
+          {% else %}
+                <h6>Al momento non sono presenti ordini conclusi.</h6>
+          {% endif %}
+
+      {% endif %}
+    {% else %}
+      <h6> effettua il login per visualizzare i tuoi ordini. </h6>
+    {% endif %}
+</body>
+{% endblock %}  

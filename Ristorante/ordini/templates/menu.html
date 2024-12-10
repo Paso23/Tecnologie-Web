@@ -1,0 +1,89 @@
+{% include "base.html" %}
+{% include "script_messaggi.html"%}
+
+<style>
+    table, th, td {
+        padding: 15px;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid;
+        text-align: center;
+    }
+    .container {
+        text-align: center;
+        padding: 15px;
+    }
+</style>
+
+<head>
+    {% block title %}
+        <h1>Menù</h1>
+    {% endblock %} 
+</head>
+{% block content %} 
+
+{% if request.user.is_staff %}
+
+    <body>
+        <table>
+            <tr>
+              <th>Nome </th>
+              <th>Categoria</th>
+              <th>Descrizione</th>
+              <th>Prezzo</th>
+              <th>elimina</th>
+            </tr>
+            {% for p in prodotti %}
+                <tr>
+                  <td>{{p.nome}}</td>
+                  <td>{{p.categoria}}</td>
+                  <td>{{p.descrizione}}</td>
+                  <td>{{p.prezzo}}</td>
+                  <td>
+                    <form action="{% url 'elimina_prodotto' p.id %}" method="POST">      
+                        {% csrf_token %}
+                        <div class="container">
+                            <button type="submit" class="btn btn-primary">elimina</button>
+                        </div>
+                    </form>
+                  </td>
+                </tr>
+            {%endfor%}
+        </table>
+        <form action="{% url 'aggiungi_prodotto' %}" method="POST">
+            {% csrf_token %}
+            <div class="container">
+                <button type="submit" class="btn btn-primary">aggiungi prodotto</button>
+            </div>
+    </body>
+
+{% else %}
+<form method="POST" action="{% url 'menu' %}">
+    {% csrf_token %}
+    <body>
+        <table>
+            <tr>
+              <th>Categoria</th>
+              <th>Nome</th>
+              <th>Descrizione</th>
+              <th>Prezzo</th>
+              <th>Quantità</th>
+             
+            </tr>
+            {% for p in prodotti %}
+                <tr>
+                  <td>{{p.nome}}</td>
+                  <td>{{p.categoria}}</td>
+                  <td>{{p.descrizione}}</td>
+                  <td>{{p.prezzo}}</td>
+                  <td><input type="number" name="quantita_{{ p.id }}" value='0' min='0'></td>
+                </tr>
+            {%endfor%}
+        </table>
+        <div class="container">
+            <button type="submit" class="btn btn-primary">Aggiungi al Carrello</button>
+        </div>
+    </body>
+</form>
+{% endif %}
+{% endblock %}

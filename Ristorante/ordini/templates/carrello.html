@@ -1,0 +1,64 @@
+{% include "base.html" %}
+<head>
+    {% block title %}
+        <h1>Riepilogo Ordine</h1>
+    {% endblock %} 
+</head>
+
+<style>
+    table, th, td {
+        padding: 15px;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid;
+        text-align: center;
+    }
+
+    .container {
+        text-align: center;
+        padding: 15px;
+    }
+    
+    h3{
+        text-align: center;
+    }
+</style>
+
+{% if prodotti_con_totale %}
+    <table>
+        <thead>
+            <tr>
+                <th>Nome prodotto</th>
+                <th>Prezzo</th>
+                <th>Quantità</th>
+                <th>Totale per prodotto</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for prodotto in prodotti_con_totale %}
+            <tr>
+                <td>{{ prodotto.prodotto.prodotto.nome }}</td>
+                <td>{{ prodotto.prodotto.prezzo_unitario }}</td>
+                <td>{{ prodotto.prodotto.quantita }}</td>
+                <td>{{ prodotto.totale }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Totale: {{ totale }}$</h3>
+{% else %}
+    <p>il carrello è vuoto </p>
+{% endif %}
+<form action="{% url 'concludi_ordine' %}" method="post">
+    {% csrf_token %}
+    <div class="container">
+        <button type="submit" class="btn btn-primary">Concludi Ordine</button>
+    </div>
+</form>
+<form action="{% url 'annulla_ordine' %}" method="post">
+    {% csrf_token %}
+    <div class="container">
+        <button type="submit" class="btn btn-primary">Annulla Ordine</button>
+    </div>
+</form>

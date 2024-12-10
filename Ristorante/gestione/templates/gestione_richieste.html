@@ -1,0 +1,89 @@
+{% include "base.html" %}
+{% include "script_messaggi.html"%}
+
+<style>
+
+    table, th, td {
+      padding: 15px;
+      margin-left: auto;
+      margin-right: auto;
+      border: 1px solid;
+      text-align: center;
+    }
+
+    .container {
+        text-align: center;
+        padding: 15px;
+    }
+    
+    h5, h6{
+      text-align: center;
+    }
+
+    h2{
+      text-align: center;
+    }   
+</style>
+
+<body>
+  <h1>Annunci Attivi:</h1>
+  {% if annunci %}
+    <table>
+        <tr>
+          <th>Figura Richiesta</th>
+          <th>Descrizione</th>
+          <th>Rispondi!</th>
+        </tr>
+        {% for annuncio in annunci %}
+            <tr>
+              <td>{{annuncio.tipologia}}</td>
+              <td>{{annuncio.descrizione}}</td>
+              <td>
+                <form action="{% url 'aggiungi_richiesta' annuncio.id %}" method="POST">      
+                  {% csrf_token %}
+                  <div class="container">
+                      <button type="submit" name="action" class="btn btn-primary">Rispondi</button>
+                  </div>
+                </form>
+              </td >
+            </tr>
+        {%endfor%}
+    </table>
+  {% else %}
+      <h6>Al momento non sono presenti annunci lavorativi.</h6>
+  {% endif %}%
+<h1>Le tue richieste:</h1>
+{% if richieste_con_tipologia%}
+  <table>
+    <tr>
+      <th>Figura Richiesta</th>
+      <th>Descrizione</th>
+      <th>Status</th>
+      <th>Motivazione</th>
+      <th>Rimuovi</th>
+    </tr>
+    {% for richiesta in richieste_con_tipologia %}
+        <tr>
+          <td>{{richiesta.tipologia}}</td>
+          <td>{{richiesta.richiesta.descrizione}}</td>
+          <td>{{richiesta.richiesta.status}}</td>
+          {% if richiesta.richiesta.motivazione %}
+            <td>{{richiesta.richiesta.motivazione}}</td>
+          {% else %}
+            <td>-</td>
+          {% endif %}
+          <td>
+            <form action="{% url 'rimuovi_richiesta' richiesta.richiesta.id %}" method="POST">      
+              {% csrf_token %}
+              <div class="container">
+                  <button type="submit" name="action" class="btn btn-primary" >Rimuovi</button>
+              </div>
+            </form>
+          </td >
+        </tr>
+    {%endfor%}
+</table>
+{% else %}
+  <h6>Al momento non hai richieste attive, la invitiamo a contattarci!</h6>
+{% endif %}
+</body>

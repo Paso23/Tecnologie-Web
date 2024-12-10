@@ -1,0 +1,19 @@
+#Progetto Tecnologie Web
+In questa cartella è presente il progetto per l'esame di Tecnologie web di Pasini Francesco(169109).
+##Progetto
+Il progetto è una web-app sviluppata in Django per gestire un Ristorante.
+##Utilizzo
+All'interno della directory è presente la directory .venv da cui si può accedere all'ambiente virtuale. Procedura dalla prima cartella del Ristorante:
+Windows:
+'''
+Ristorante/.venv/Scripts/activate.bat
+'''
+Linux:
+'''
+source ./Ristorante/.venv/Scripts/activate
+'''
+
+Oppure utilizzando il file requirements.txt quando si è nella stessa directory del file e all'interno del venv:
+'''
+pip install -r requirements.txt
+'''

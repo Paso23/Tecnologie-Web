@@ -1,0 +1,68 @@
+
+    <style>
+
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #333;
+      position: fixed; /* Fissa la navbar in alto */
+      top: 0; /* Imposta la navbar in cima alla pagina */
+      width: 100%; /* Fa sì che la navbar occupi tutta la larghezza della pagina */
+      z-index: 1000; /* Assicura che la navbar sia sopra gli altri contenuti */
+    }
+    
+    
+    li a {
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      float: right;
+    }
+    li p {
+        display: block;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        float: left;
+        padding: 14px 16px;
+    }
+    
+    h1 {
+        text-align: center;
+    }
+    
+    li a:hover {
+      background-color: #111;
+    }
+    
+    p {
+        text-align: center;
+        font-size: 18px;
+    
+    }
+    </style>
+    <ul>
+        {% if request.user.is_staff %}
+          <li><a href="{% url 'homepage' %}">Home</a></li>
+          <li><a href="{% url 'logout' %}">logout</a></li>
+          <li><a href="{% url 'gestione_annunci' %}">Gestione Annunci/Richieste</a></li>
+          <li><a href="{% url 'menu_ristoratore'%}">Gestione Menu'</a></li>
+        {% else %}
+          <li><a href="{% url 'homepage' %}">Home</a></li>
+          <li><a href="{% url 'impostazioni'%}">impostazioni</a></li>
+          <li><a href="{% url 'gestione_richieste' %}">Lavora con Noi!</a></li>
+          <li><a href="{% url 'menu'%}">Menu'</a></li>
+          {% if request.user.is_authenticated%}
+          <li><a href="{% url 'logout'%}">logout</a></li>
+           {%else%}
+          <li><a href="{% url 'login' %}">login</a></li>
+          {% endif%}
+        {% endif %}
+
+        <li><p> Benvenuto, {{request.user}}</p></li>
+    </ul>
+    

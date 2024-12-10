@@ -1,0 +1,43 @@
+{% include "base.html" %}
+
+<style>
+    .container {
+        display: block; /* Ogni label e input su una nuova linea */
+          /* Spaziatura tra le etichette */
+     /* Imposta una dimensione leggermente maggiore per le etichette */
+        font-weight: bold;
+        text-align: center;
+    }
+    
+    .form-group {
+        margin-bottom: 20px; /* Spazio tra i campi del form */
+    }
+    
+    label {
+        display: block; /* Ogni etichetta inizia su una nuova riga */
+        align: center;
+        margin-bottom: 5px; /* Distanza tra la label e il campo di input */
+    }
+
+
+</style>
+
+<head>
+    {% block title %}
+        <h1>Aggiungi la descrizione per la tua richiesta:</h1>
+    {% endblock %} 
+</head>
+{% block content %}
+<div class="container">
+    <form action='' method='POST'>
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }} <!-- Renderizza il campo del form -->
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Aggiungi</button>
+    </form>
+</div>
+{% endblock %}

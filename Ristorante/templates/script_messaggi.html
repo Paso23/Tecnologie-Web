@@ -1,0 +1,47 @@
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Trova tutti gli elementi con la classe 'messages'
+        const messages = document.querySelectorAll('.messages li');
+        
+        messages.forEach(function(message) {
+            // Imposta un timer per nascondere ogni messaggio dopo 3 secondi (3000ms)
+            setTimeout(function() {
+                message.style.display = 'none';
+            }, 3000); // 3000ms = 3 secondi
+        });
+    });
+</script>
+
+<style>
+    .messages li.fade-out {
+        opacity: 0;
+    }
+    .messages li{
+        text-align: center;
+    }
+    .messages li.info, .messages li.debug {
+        background-color: #d0ebff;
+    }
+    
+    .messages li.success {
+        background-color: #b2f2bb;
+    }
+    
+    .message li.warning {
+        background-color: #ffec99;
+    }
+    
+    .messages li.error {
+        background-color: #ffe3e3;
+    }
+</style>
+
+{% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li {% if message.tags %} class="{{ message.tags }}"{% endif %}><h5>{{ message }}</h5></li>
+      {% endfor %}
+    </ul>
+{% endif %}

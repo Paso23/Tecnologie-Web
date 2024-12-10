@@ -1,0 +1,17 @@
+{% include 'base.html'%}
+{% include 'script_messaggi.html'%}
+
+<body>
+
+    <h1>Inserisci Motivazione per il Rifiuto</h1>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <div>
+            <label for="motivazione">Motivazione:</label>
+            {{ form.motivazione }}
+        </div>
+        <button type="submit">Conferma</button>
+    </form>
+    
+</body>
